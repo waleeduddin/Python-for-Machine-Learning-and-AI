@@ -1,0 +1,48 @@
+# A simple calculator program in Python
+
+# Use a loop to allow multiple calculations without restarting the program
+while True:
+    try:
+        # Prompt the user to enter the first number
+        num1 = float(input("Enter the first number: "))
+        
+        # Prompt the user to enter the operator
+        operator = input("Enter an operator (+, -, *, /): ")
+        
+        # Prompt the user to enter the second number
+        num2 = float(input("Enter the second number: "))
+
+        # Perform the calculation based on the operator
+        if operator == '+':
+            result = num1 + num2
+            print(f"Result: {num1} + {num2} = {result}")
+        elif operator == '-':
+            result = num1 - num2
+            print(f"Result: {num1} - {num2} = {result}")
+        elif operator == '*':
+            result = num1 * num2
+            print(f"Result: {num1} * {num2} = {result}")
+        elif operator == '/':
+            # Check for division by zero
+            if num2 == 0:
+                print("Error: Division by zero is not allowed.")
+            else:
+                result = num1 / num2
+                print(f"Result: {num1} / {num2} = {result}")
+        else:
+            # Handle invalid operator input
+            print("Error: Invalid operator. Please use +, -, *, or /.")
+
+    except ValueError:
+        # Handle non-numeric input for the numbers
+        print("Error: Invalid input. Please enter valid numbers.")
+    except Exception as e:
+        # Catch any other unexpected errors
+        print(f"An unexpected error occurred: {e}")
+    
+    # Ask the user if they want to perform another calculation
+    another_calculation = input("Do you want to perform another calculation? (yes/no): ").lower()
+    if another_calculation != 'yes':
+        break
+
+print("Thank you for using the calculator!")
