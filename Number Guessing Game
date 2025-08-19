@@ -1,0 +1,55 @@
+import random
+import sys
+
+# --- Game Setup ---
+# Set the range for the random number
+lower_bound = 1
+upper_bound = 100
+
+# Set the maximum number of guesses
+max_guesses = 7
+
+# Generate a random number between the lower and upper bounds
+secret_number = random.randint(lower_bound, upper_bound)
+
+# Initialize the number of guesses taken
+guesses_taken = 0
+
+print("Welcome to the Number Guessing Game!")
+print(f"I'm thinking of a number between {lower_bound} and {upper_bound}.")
+print(f"You have {max_guesses} guesses to find it.")
+
+# --- Main Game Loop ---
+while guesses_taken < max_guesses:
+    try:
+        # Prompt the user to enter their guess
+        guess = int(input("Enter your guess: "))
+        
+        # Increment the guess counter
+        guesses_taken += 1
+        
+        # Provide hints to the user
+        if guess < secret_number:
+            print("Your guess is too low.")
+        elif guess > secret_number:
+            print("Your guess is too high.")
+        else:
+            # The guess is correct, break the loop
+            print(f"Congratulations! You guessed the number in {guesses_taken} guesses.")
+            # Exit the program gracefully
+            sys.exit()
+
+    except ValueError:
+        # Handle cases where the user enters non-integer input
+        print("Invalid input. Please enter a whole number.")
+    except Exception as e:
+        # Catch any other unexpected errors
+        print(f"An unexpected error occurred: {e}")
+
+# --- End of Game ---
+# This code runs if the loop finishes without the user guessing correctly
+print(f"Game over. You ran out of guesses.")
+print(f"The number I was thinking of was {secret_number}.")
+
+# Exit the program after the game is over
+sys.exit()
