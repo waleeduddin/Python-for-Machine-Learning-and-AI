@@ -1,60 +1,45 @@
-import tkinter as tk
+import ipywidgets as widgets
+from IPython.display import display
 
-class Calculator:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Simple Calculator")
-        self.root.geometry("300x400")
-        self.root.resizable(False, False)
+expression = widgets.Text(
+    value='',
+    placeholder='Enter calculation',
+    description='Expression:',
+    disabled=False
+)
 
-        self.expression = ""
-        self.input_text = tk.StringVar()
+output = widgets.Output()
 
-        self.create_widgets()
-
-    def create_widgets(self):
-        input_frame = tk.Frame(self.root, height=50, bd=0, bg="lightgray")
-        input_frame.pack(side="top", fill="both")
-
-        input_field = tk.Entry(input_frame, font=('Arial', 18), textvariable=self.input_text, justify="right")
-        input_field.pack(expand=True, fill="both", ipady=10)
-
-        button_frame = tk.Frame(self.root)
-        button_frame.pack(expand=True, fill="both")
-
-        buttons = [
-            ['7', '8', '9', '/'],
-            ['4', '5', '6', '*'],
-            ['1', '2', '3', '-'],
-            ['0', '.', '=', '+'],
-            ['C']
-        ]
-
-        for row in buttons:
-            row_frame = tk.Frame(button_frame)
-            row_frame.pack(expand=True, fill="both")
-            for btn in row:
-                button = tk.Button(row_frame, text=btn, font=('Arial', 18), relief='ridge', borderwidth=1,
-                                   command=lambda b=btn: self.on_button_click(b))
-                button.pack(side="left", expand=True, fill="both")
-
-    def on_button_click(self, char):
-        if char == "=":
+def on_button_click(b):
+    if b.description == '=':
+        with output:
             try:
-                result = str(eval(self.expression))
-                self.input_text.set(result)
-                self.expression = result
-            except:
-                self.input_text.set("Error")
-                self.expression = ""
-        elif char == "C":
-            self.expression = ""
-            self.input_text.set("")
-        else:
-            self.expression += str(char)
-            self.input_text.set(self.expression)
+                result = eval(expression.value)
+                print(result)
+                expression.value = str(result) # Update the input field with the result
+            except Exception as e:
+                print("Error")
+                expression.value = "Error"
+    elif b.description == 'C':
+        expression.value = ''
+        output.clear_output()
+    else:
+        expression.value += b.description
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    Calculator(root)
-    root.mainloop()
+buttons = [
+    '7', '8', '9', '/',
+    '4', '5', '6', '*',
+    '1', '2', '3', '-',
+    '0', '.', '=', '+'
+]
+
+button_grid = widgets.VBox([widgets.HBox([widgets.Button(description=button) for button in buttons[i:i+4]]) for i in range(0, len(buttons), 4)])
+
+clear_button = widgets.Button(description='C')
+clear_button.on_click(on_button_click)
+
+for row in button_grid.children:
+    for button in row.children:
+        button.on_click(on_button_click)
+
+display(expression, button_grid, clear_button, output)
